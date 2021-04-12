@@ -33,8 +33,8 @@ test_data = lgb.Dataset(X_test, label=y_test, free_raw_data=False, reference=tra
 
 def objective(trial):
     op_parameters = {
-        'objective': 'regression',
-        'metric': 'rmse',
+        'objective': 'multiclass',
+        'metric': 'multi_logloss',
         'boosting': 'gbdt',
         'num_leaves': trial.suggest_int('num_leaves', 5, 100),
         'feature_fraction': trial.suggest_uniform('feature_fraction', 0.1, 0.9),
@@ -58,8 +58,8 @@ study = optuna.create_study()
 study.optimize(objective, n_trials=50)
 
 parameters = {
-    'objective': 'regression',
-    'metric': 'rmse',
+    'objective': 'multi_class',  # regression
+    'metric': 'multiclass', #rmse
     'boosting': 'gbdt',
     'num_leaves': study.best_params['num_leaves'],
     'bagging_fraction': study.best_params['bagging_fraction'],
@@ -101,4 +101,4 @@ confusion_matrix = pd.crosstab(conf_df['y_test'], conf_df['y_pred'], rownames=['
 print(confusion_matrix)
 
 # Store model
-joblib.dump(lgb_model, "models/lgb_210409b.pkl")
+#joblib.dump(lgb_model, "models/lgb_210409b.pkl")
